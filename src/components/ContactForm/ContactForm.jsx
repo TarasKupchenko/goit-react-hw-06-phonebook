@@ -1,11 +1,13 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
-import { addContact } from './contactsSlice';
+import { addContact } from '../../redux/contactsSlice';
+import { selectContacts } from '../../redux/selectors';
 import css from './ContactForm.module.css';
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -15,6 +17,13 @@ export const ContactForm = () => {
 
     if (name.trim() === '' || number.trim() === '') {
       alert('Please enter name and number.');
+      return;
+    }
+
+    const isNameExists = contacts.some(contact => contact.name === name);
+
+    if (isNameExists) {
+      alert(`Contact with name ${name} already exists!`);
       return;
     }
 
